@@ -1,0 +1,81 @@
+.welcome-screen {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+}
+
+.welcome-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.welcome-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 40px 24px;
+}
+
+.welcome-subtitle {
+  font-family: var(--font-title);
+  font-size: clamp(22px, 6vw, 28px);
+  color: #FFFFFF;
+  margin: 0;
+  text-shadow:
+    -2px 0 #000, 0 2px #000, 2px 0 #000, 0 -2px #000,
+    -2px -2px #000, 2px 2px #000, -2px 2px #000, 2px -2px #000;
+}
+
+.welcome-title {
+  font-family: var(--font-title-strong);
+  font-size: clamp(64px, 22vw, 96px);
+  color: #FFFFFF;
+  text-align: center;
+  margin: 8px 0 0;
+  line-height: 0.95;
+  text-shadow:
+    -3px 0 #000, 0 3px #000, 3px 0 #000, 0 -3px #000,
+    -3px -3px #000, 3px 3px #000, -3px 3px #000, 3px -3px #000;
+}
+
+.welcome-spacer {
+  flex: 1;
+  min-height: 40px;
+}
+
+.btn {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  font-size: 17px;
+  margin-bottom: 16px;
+  border: 3px solid var(--color-accent);
+}
+
+.btn:last-child {
+  margin-bottom: 0;
+}
+
+.btn-outline {
+  background: var(--color-bg-paper);
+  color: var(--color-text-primary);
+}
+
+.btn-filled {
+  background: var(--color-accent);
+  color: var(--color-text-primary);
+}
+
+.btn:focus-visible {
+  outline: 3px solid #FFFFFF;
+  outline-offset: 2px;
+}

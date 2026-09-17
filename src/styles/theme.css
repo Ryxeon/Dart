@@ -1,0 +1,73 @@
+:root {
+  /* Couleurs primaires */
+  --color-primary: #0074D9;
+  --color-primary-dark: #00509E;
+  --color-primary-light: #D6EBFF;
+  --color-bg-header: #06345E;
+
+  /* Couleurs d'accent */
+  --color-accent: #FF8C1A;
+  --color-accent-light: #FFE7CC;
+  --color-accent-strong: #E07B1A;
+
+  /* Couleurs fonctionnelles */
+  --color-success: #2ECC71;
+  --color-error: #E74C3C;
+  --color-warning: #F1C40F;
+
+  /* Fonds */
+  --color-bg-main: #FAFBFC;
+  --color-bg-soft: #FBF4E7;
+  --color-bg-card: #F0F2F5;
+  --color-bg-paper: #FFFDF8;
+
+  /* Textes */
+  --color-text-primary: #1C1E21;
+  --color-text-secondary: #5C6470;
+  --color-text-muted: #7A7266;
+
+  /* Bordures */
+  --color-border: #DCE1E6;
+  --color-border-soft: #E8DDC8;
+
+  /* Rayons */
+  --radius-sm: 12px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+
+  /* Polices */
+  --font-text: 'Comic Neue', sans-serif;
+  --font-title: 'Anton', sans-serif;
+  --font-title-strong: 'Anton SC', sans-serif;
+  --font-button: 'Mali', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-text);
+  background: var(--color-bg-main);
+  color: var(--color-text-primary);
+}
+
+button {
+  font-family: var(--font-button);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+input, select {
+  font-family: var(--font-text);
+}
+
+/* Respect des préférences d'accessibilité : mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
