@@ -21,6 +21,14 @@
   margin: 2px 0 24px;
 }
 
+.radar-wrap {
+  text-align: center;
+}
+
+.radar-wrap .radar-btn {
+  margin-top: 20px;
+}
+
 .radar-placeholder {
   background: var(--color-bg-card);
   border-radius: var(--radius-md);

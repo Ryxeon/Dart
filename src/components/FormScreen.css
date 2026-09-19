@@ -30,6 +30,26 @@
   color: var(--color-text-muted);
 }
 
+.field-input-wrap {
+  position: relative;
+}
+
+.field-input-wrap .field-input {
+  padding-right: 44px;
+}
+
+.field-toggle-visibility {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 18px;
+  padding: 4px;
+  line-height: 1;
+}
+
 /* Champs */
 .field {
   margin-bottom: 18px;
@@ -148,6 +168,30 @@
   cursor: pointer;
   padding: 0 0 12px;
   font-family: var(--font-text);
+}
+
+.field-input-wrap {
+  position: relative;
+}
+
+.field-input-wrap .field-input {
+  padding-right: 44px;
+}
+
+.field-toggle-visibility {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 16px;
+  padding: 4px;
+  cursor: pointer;
+}
+
+.field-toggle-visibility:focus-visible {
+  outline: 2px solid var(--color-primary-dark);
 }
 
 /* Section divider */

@@ -1,0 +1,93 @@
+.quest-screen {
+  min-height: 100vh;
+  background: var(--color-bg-main);
+  padding: 30px 22px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.quest-progress {
+  height: 6px;
+  background: var(--color-bg-card);
+  border-radius: 3px;
+  margin: 12px 0 28px;
+  overflow: hidden;
+}
+
+.quest-progress-bar {
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 0.2s;
+}
+
+.quest-etape {
+  flex: 1;
+}
+
+.quest-titre {
+  font-family: var(--font-title);
+  font-size: 26px;
+  color: var(--color-primary);
+  margin: 0 0 20px;
+}
+
+.quest-field {
+  margin-bottom: 20px;
+}
+
+.quest-field label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.quest-field input[type="number"],
+.quest-field select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+}
+
+.quest-field input[type="range"] {
+  width: 100%;
+  accent-color: var(--color-primary);
+}
+
+.quest-hint {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin: 0 0 20px;
+}
+
+.quest-nav {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.quest-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid transparent;
+  font-size: 15px;
+}
+
+.quest-btn--primary {
+  background: var(--color-primary);
+  color: #FFFFFF;
+}
+
+.quest-btn--secondary {
+  background: #FFFFFF;
+  border-color: var(--color-border);
+  color: var(--color-text-secondary);
+}

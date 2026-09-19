@@ -34,6 +34,12 @@ alter table equipes enable row level security;
 create policy "Un utilisateur peut voir son profil"
   on profils for select using (auth.uid() = id);
 
+create policy "Un utilisateur peut voir ses coéquipiers"
+  on profils for select using (
+    equipe_id is not null
+    and equipe_id = (select equipe_id from profils where id = auth.uid())
+  );
+
 create policy "Un utilisateur peut modifier son profil"
   on profils for update using (auth.uid() = id);
 

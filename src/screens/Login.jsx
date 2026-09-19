@@ -10,6 +10,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [erreur, setErreur] = useState('');
   const [chargement, setChargement] = useState(false);
+  const [messageReset, setMessageReset] = useState('');
 
   async function handleConnexion() {
     if (!supabaseReady) {
@@ -25,6 +26,19 @@ export default function Login() {
       return;
     }
     navigate('/accueil');
+  }
+
+  async function handleMotDePasseOublie() {
+    if (!email.includes('@')) {
+      setErreur('Entre ton email ci-dessus, puis clique à nouveau sur "Mot de passe oublié"');
+      return;
+    }
+    if (!supabaseReady) return;
+    setErreur('');
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/reinitialiser-mot-de-passe',
+    });
+    setMessageReset(error ? "Erreur lors de l'envoi." : 'Email envoyé ! Vérifie ta boîte de réception.');
   }
 
   return (
@@ -50,7 +64,8 @@ export default function Login() {
         error={erreur}
       />
 
-      <button className="form-link">Mot de passe oublié ?</button>
+      <button className="form-link" onClick={handleMotDePasseOublie}>Mot de passe oublié ?</button>
+      {messageReset && <p className="quest-hint">{messageReset}</p>}
 
       <Button variant="filled" onClick={handleConnexion}>
         {chargement ? 'Connexion...' : 'Connexion'}
