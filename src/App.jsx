@@ -10,6 +10,7 @@ import Home from './screens/Home.jsx';
 import Settings from './screens/Settings.jsx';
 import Questionnaire from './screens/Questionnaire.jsx';
 import ResetPassword from './screens/ResetPassword.jsx';
+import ExerciceListe from './screens/ExerciceListe.jsx';
 import './styles/theme.css';
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path="/parametres" element={<Settings />} />
         <Route path="/questionnaire" element={<Questionnaire />} />
         <Route path="/reinitialiser-mot-de-passe" element={<ResetPassword />} />
+        <Route path="/entrainement/:categorie" element={<ExerciceListe />} />
       </Routes>
     </BrowserRouter>
   );

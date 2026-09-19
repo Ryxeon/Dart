@@ -1,0 +1,35 @@
+.exercices-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.exercice-card {
+  background: var(--color-bg-paper);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.exercice-nom {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.exercice-valeur {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.exercice-video-link {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--color-primary);
+  font-weight: 600;
+  margin: 8px 0;
+}
