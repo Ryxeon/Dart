@@ -11,6 +11,8 @@ import Settings from './screens/Settings.jsx';
 import Questionnaire from './screens/Questionnaire.jsx';
 import ResetPassword from './screens/ResetPassword.jsx';
 import ExerciceListe from './screens/ExerciceListe.jsx';
+import RegleDetail from './screens/RegleDetail.jsx';
+import PosteDetail from './screens/PosteDetail.jsx';
 import './styles/theme.css';
 
 function App() {
@@ -29,6 +31,8 @@ function App() {
         <Route path="/questionnaire" element={<Questionnaire />} />
         <Route path="/reinitialiser-mot-de-passe" element={<ResetPassword />} />
         <Route path="/entrainement/:categorie" element={<ExerciceListe />} />
+        <Route path="/regles/:id" element={<RegleDetail />} />
+        <Route path="/postes/:id" element={<PosteDetail />} />
       </Routes>
     </BrowserRouter>
   );

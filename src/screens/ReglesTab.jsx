@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './ReglesTab.css';
 
 const REGLES_IMPORTANTES = [
@@ -17,6 +18,7 @@ const POSTES = [
 
 export default function ReglesTab() {
   const [recherche, setRecherche] = useState('');
+  const navigate = useNavigate();
 
   return (
     <div className="tab-page">
@@ -31,19 +33,21 @@ export default function ReglesTab() {
         aria-label="Rechercher dans les règles"
       />
 
-      <button className="regles-all-btn">📘 Toutes les règles</button>
+      <button className="regles-all-btn" onClick={() => navigate('/regles/rotations')}>
+        📘 Toutes les règles
+      </button>
 
       <p className="section-label">Règles importantes</p>
       <div className="regles-grid">
         {REGLES_IMPORTANTES.map((r) => (
-          <button key={r.id} className="regle-card">{r.label}</button>
+          <button key={r.id} className="regle-card" onClick={() => navigate(`/regles/${r.id}`)}>{r.label}</button>
         ))}
       </div>
 
       <p className="section-label">Postes</p>
       <div className="regles-grid">
         {POSTES.map((p) => (
-          <button key={p.id} className="regle-card">{p.label}</button>
+          <button key={p.id} className="regle-card" onClick={() => navigate(`/postes/${p.id}`)}>{p.label}</button>
         ))}
       </div>
     </div>
