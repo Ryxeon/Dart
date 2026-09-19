@@ -2,11 +2,30 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FormScreen, Field, Button } from '../components/FormScreen.jsx';
 import Kroa from '../components/Kroa.jsx';
+import { supabase, supabaseReady } from '../lib/supabase.js';
 
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [erreur, setErreur] = useState('');
+  const [chargement, setChargement] = useState(false);
+
+  async function handleConnexion() {
+    if (!supabaseReady) {
+      setErreur("La base de données n'est pas encore branchée (voir les instructions).");
+      return;
+    }
+    setErreur('');
+    setChargement(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setChargement(false);
+    if (error) {
+      setErreur('Email ou mot de passe incorrect.');
+      return;
+    }
+    navigate('/accueil');
+  }
 
   return (
     <FormScreen title="Connectez-vous" subtitle="Ravi de vous revoir ! Prêt à jouer ?">
@@ -28,12 +47,13 @@ export default function Login() {
         value={password}
         onChange={setPassword}
         required
+        error={erreur}
       />
 
       <button className="form-link">Mot de passe oublié ?</button>
 
-      <Button variant="filled" onClick={() => alert('La connexion sera active une fois la base de données branchée')}>
-        Connexion
+      <Button variant="filled" onClick={handleConnexion}>
+        {chargement ? 'Connexion...' : 'Connexion'}
       </Button>
 
       <div className="kroa-zone">

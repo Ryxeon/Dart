@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FormScreen, Field, SelectField, Button } from '../components/FormScreen.jsx';
+import { supabase, supabaseReady } from '../lib/supabase.js';
 import './Profile.css';
 
 const POSTES = [
@@ -36,7 +37,7 @@ export default function Profile() {
     }
   }
 
-  function handleValider() {
+  async function handleValider() {
     if (!prenom.trim()) {
       setErreurPrenom('Le prénom est obligatoire');
       return;
@@ -44,6 +45,24 @@ export default function Profile() {
     setErreurPrenom('');
     localStorage.setItem('dart_prenom', prenom);
     localStorage.setItem('dart_capitaine', estCapitaine ? 'oui' : 'non');
+
+    if (supabaseReady) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('profils').upsert({
+          id: user.id,
+          prenom,
+          nom: nom || null,
+          genre,
+          age: age ? parseInt(age, 10) : null,
+          taille: taille ? parseInt(taille, 10) : null,
+          bras_tendu: brasTendu ? parseInt(brasTendu, 10) : null,
+          poste,
+          est_capitaine: estCapitaine,
+        });
+      }
+    }
+
     navigate('/equipe-choix');
   }
 

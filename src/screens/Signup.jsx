@@ -2,24 +2,47 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FormScreen, Field, Button } from '../components/FormScreen.jsx';
 import Kroa from '../components/Kroa.jsx';
+import { supabase, supabaseReady } from '../lib/supabase.js';
 
 export default function Signup() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [chargement, setChargement] = useState(false);
 
-  function handleContinue() {
+  async function handleContinue() {
     if (!email.includes('@')) {
       setError('Entre une adresse email valide');
       return;
     }
     if (password.length < 6) {
-      setError('');
-      alert('Le mot de passe doit faire au moins 6 caractères');
+      setError('Le mot de passe doit faire au moins 6 caractères');
       return;
     }
     setError('');
+
+    if (!supabaseReady) {
+      // Base de données pas encore branchée : on continue quand même pour tester le parcours
+      localStorage.setItem('dart_email_temp', email);
+      navigate('/profil');
+      return;
+    }
+
+    setChargement(true);
+    const { data, error: signUpError } = await supabase.auth.signUp({ email, password });
+    setChargement(false);
+
+    if (signUpError) {
+      if (signUpError.message.includes('already registered')) {
+        setError('Cet email est déjà utilisé');
+      } else {
+        setError("Erreur : " + signUpError.message);
+      }
+      return;
+    }
+
+    localStorage.setItem('dart_user_id', data.user?.id || '');
     navigate('/profil');
   }
 
@@ -46,7 +69,9 @@ export default function Signup() {
         required
       />
 
-      <Button variant="filled" onClick={handleContinue}>Continuer</Button>
+      <Button variant="filled" onClick={handleContinue}>
+        {chargement ? 'Création...' : 'Continuer'}
+      </Button>
 
       <div className="kroa-zone">
         <div className="kroa-line" />

@@ -168,6 +168,30 @@
   margin: 0 0 16px;
 }
 
+/* Grille de jours (création d'équipe) */
+.jours-grid {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.jour-btn {
+  flex: 1;
+  min-width: 40px;
+  padding: 10px 4px;
+  border: 2px solid var(--color-border-soft);
+  border-radius: 10px;
+  background: var(--color-bg-paper);
+  color: var(--color-text-muted);
+  font-size: 12px;
+}
+
+.jour-btn--active {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #FFFFFF;
+}
+
 /* Kroa placeholder */
 .kroa-zone {
   display: flex;

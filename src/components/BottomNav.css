@@ -1,0 +1,30 @@
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-bg-header);
+  display: flex;
+  padding: 8px 2px calc(8px + env(safe-area-inset-bottom));
+  z-index: 50;
+}
+
+.nav-tab {
+  flex: 1;
+  background: none;
+  border: none;
+  color: #A8C3DC;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 6px 2px;
+  font-family: var(--font-text);
+}
+
+.nav-tab--active {
+  color: #FFFFFF;
+}
+
+.nav-tab:focus-visible {
+  outline: 2px solid #FFFFFF;
+  outline-offset: 2px;
+}
