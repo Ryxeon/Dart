@@ -1,0 +1,66 @@
+.next-event-card {
+  background: var(--color-bg-header);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+  margin-bottom: 24px;
+  color: #FFFFFF;
+}
+
+.next-event-label {
+  font-size: 12px;
+  color: #A8C3DC;
+  margin: 0 0 4px;
+}
+
+.next-event-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.calendar-header button {
+  background: var(--color-bg-card);
+  border: none;
+  border-radius: 8px;
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  text-align: center;
+}
+
+.calendar-grid--labels {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+
+.calendar-day {
+  padding: 8px 0;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.calendar-day--today {
+  background: var(--color-accent);
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.calendar-day--empty {
+  visibility: hidden;
+}

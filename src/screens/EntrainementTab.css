@@ -1,0 +1,29 @@
+.categories-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.categorie-card {
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 22px 20px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.categorie-label {
+  font-family: var(--font-title);
+  font-size: 20px;
+  color: #FFFFFF;
+}
+
+.categorie-desc {
+  font-size: 13px;
+  color: var(--color-primary-light);
+  font-family: var(--font-text);
+  font-weight: normal;
+}

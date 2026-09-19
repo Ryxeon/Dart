@@ -1,5 +1,9 @@
 import { useState } from 'react';
 import BottomNav from '../components/BottomNav.jsx';
+import EvenementTab from './EvenementTab.jsx';
+import EntrainementTab from './EntrainementTab.jsx';
+import ReglesTab from './ReglesTab.jsx';
+import EquipeTab from './EquipeTab.jsx';
 import './Home.css';
 
 export default function Home() {
@@ -10,10 +14,10 @@ export default function Home() {
     <div className="home-screen">
       <div className="home-content">
         {tab === 'competences' && <CompetencesTab prenom={prenom} />}
-        {tab === 'evenement' && <PlaceholderTab titre="Événement" />}
-        {tab === 'entrainement' && <PlaceholderTab titre="Entraînement" />}
-        {tab === 'regles' && <PlaceholderTab titre="Règles" />}
-        {tab === 'equipe' && <PlaceholderTab titre="Équipe" />}
+        {tab === 'evenement' && <EvenementTab />}
+        {tab === 'entrainement' && <EntrainementTab />}
+        {tab === 'regles' && <ReglesTab />}
+        {tab === 'equipe' && <EquipeTab />}
       </div>
       <BottomNav active={tab} onChange={setTab} />
     </div>
@@ -30,15 +34,6 @@ function CompetencesTab({ prenom }) {
         <p>Ton radar de compétences apparaîtra ici une fois le questionnaire rempli.</p>
         <button className="radar-btn">Faire le questionnaire</button>
       </div>
-    </div>
-  );
-}
-
-function PlaceholderTab({ titre }) {
-  return (
-    <div className="tab-page">
-      <h1 className="greeting-name" style={{ fontSize: 26 }}>{titre}</h1>
-      <p className="placeholder-text">Cette page arrive bientôt.</p>
     </div>
   );
 }

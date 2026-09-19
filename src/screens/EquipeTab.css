@@ -1,0 +1,69 @@
+.club-card {
+  background: var(--color-bg-header);
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  margin-bottom: 24px;
+  color: #FFFFFF;
+}
+
+.club-name {
+  font-family: var(--font-title);
+  font-size: 24px;
+  margin: 0 0 4px;
+}
+
+.club-slogan {
+  font-size: 13px;
+  color: #A8C3DC;
+  margin: 0 0 14px;
+}
+
+.club-code {
+  font-size: 13px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 8px 12px;
+  display: inline-block;
+}
+
+.section-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 12px;
+}
+
+.joueurs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.joueur-row {
+  display: flex;
+  justify-content: space-between;
+  background: var(--color-bg-card);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+.joueur-nom {
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.joueur-poste {
+  color: var(--color-text-secondary);
+}
+
+.settings-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--color-border);
+  background: #FFFFFF;
+  color: var(--color-text-primary);
+  font-size: 14px;
+}

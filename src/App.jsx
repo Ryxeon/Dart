@@ -7,6 +7,7 @@ import TeamChoice from './screens/TeamChoice.jsx';
 import CreateTeam from './screens/CreateTeam.jsx';
 import JoinTeam from './screens/JoinTeam.jsx';
 import Home from './screens/Home.jsx';
+import Settings from './screens/Settings.jsx';
 import './styles/theme.css';
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/creer-equipe" element={<CreateTeam />} />
         <Route path="/rejoindre-equipe" element={<JoinTeam />} />
         <Route path="/accueil" element={<Home />} />
+        <Route path="/parametres" element={<Settings />} />
       </Routes>
     </BrowserRouter>
   );
