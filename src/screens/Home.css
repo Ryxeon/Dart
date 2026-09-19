@@ -25,6 +25,11 @@
   text-align: center;
 }
 
+.radar-wrap svg {
+  max-width: 75%;
+  margin: 0 auto;
+}
+
 .radar-wrap .radar-btn {
   margin-top: 20px;
 }

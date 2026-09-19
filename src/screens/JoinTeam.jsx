@@ -31,6 +31,18 @@ export default function JoinTeam() {
       }
 
       const { data: { user } } = await supabase.auth.getUser();
+
+      const { data: profilExistant } = await supabase
+        .from('profils')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!profilExistant) {
+        const prenomSecours = localStorage.getItem('dart_prenom') || 'Joueur';
+        await supabase.from('profils').insert({ id: user.id, prenom: prenomSecours });
+      }
+
       await supabase.from('profils').update({ equipe_id: equipe.id }).eq('id', user.id);
       localStorage.setItem('dart_equipe_code', code.trim().toUpperCase());
     } else {

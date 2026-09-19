@@ -109,7 +109,12 @@ export default function Questionnaire() {
 
       {nom === 'endurance' && (
         <Etape titre="Endurance">
-          <p className="quest-hint">Lance le test navette (façon Luc Léger, 20m) directement ici : l'app te fera les bips.</p>
+          <p className="quest-hint">
+            <strong>Comment ça marche :</strong> place deux repères au sol à 20 mètres l'un de l'autre.
+            À chaque bip, cours d'un repère à l'autre — tu dois y être avant le bip suivant.
+            Le rythme accélère toutes les minutes (palier). Le test s'arrête quand tu n'arrives plus
+            à temps deux fois de suite : c'est ton dernier palier validé.
+          </p>
           <TestEndurance onTermine={(p) => setPalierEndurance(p)} />
           <div style={{ marginTop: 20 }}>
             <NumField label="Ou entre directement le dernier palier validé" value={palierEndurance} onChange={setPalierEndurance} />
@@ -129,11 +134,35 @@ export default function Questionnaire() {
 
       {nom === 'technique' && (
         <Etape titre="Technique">
-          <p className="quest-hint">Pour chaque action, indique le nombre moyen de points sur 10 tentatives (Raté=0, Correct=1, Réussi=2, Parfait=3), moyenne entre 0 et 3.</p>
+          <p className="quest-hint">
+            Pour chaque action, fais 10 tentatives et donne un point selon la qualité de chacune :
+            <strong> Raté = 0</strong>, <strong>Correct = 1</strong>, <strong>Réussi = 2</strong>, <strong>Parfait = 3</strong>.
+            Fais la moyenne des 10 points (entre 0 et 3) et entre-la ci-dessous.
+          </p>
+
+          <div className="quest-hint">
+            <strong>Réception</strong> — Parfait : la balle arrive exactement sur le passeur. Réussi : la balle reste en l'air, exploitable. Correct : la balle est touchée mais mal dirigée. Raté : la balle n'est pas touchée.
+          </div>
           <NumField label="Réception (moyenne /3)" value={receptionPts} onChange={setReceptionPts} step="0.1" />
+
+          <div className="quest-hint">
+            <strong>Passe</strong> — Vise un panier de basket. Parfait : le ballon rentre dans le panier. Réussi : il touche le carré noir. Correct : il touche la planche. Raté : rien touché.
+          </div>
           <NumField label="Passe (moyenne /3)" value={passePts} onChange={setPassePts} step="0.1" />
+
+          <div className="quest-hint">
+            <strong>Attaque</strong> — Parfait : la balle atterrit dans une zone précise désignée à l'avance. Réussi : belle attaque qui reste dans le terrain adverse. Correct : la balle passe le filet, sans plus. Raté : la balle ne passe pas.
+          </div>
           <NumField label="Attaque (moyenne /3)" value={attaquePts} onChange={setAttaquePts} step="0.1" />
+
+          <div className="quest-hint">
+            <strong>Service</strong> — Parfait : le service atteint une zone visée à l'avance. Réussi : service normal, bien dans le terrain. Correct : le service passe le filet, sans plus. Raté : le service ne passe pas.
+          </div>
           <NumField label="Service (moyenne /3)" value={servicePts} onChange={setServicePts} step="0.1" />
+
+          <div className="quest-hint">
+            <strong>Contre</strong> — Parfait : monster block (contre point direct). Réussi : le ballon retombe dans le camp adverse. Correct : tu touches ou gênes l'attaquant sans contrer. Raté : aucun impact sur l'attaque.
+          </div>
           <NumField label="Contre (moyenne /3)" value={contrePts} onChange={setContrePts} step="0.1" />
         </Etape>
       )}

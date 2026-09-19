@@ -7,9 +7,12 @@ const DUREE_PALIER_MS = 60000;
 export default function TestEndurance({ onTermine }) {
   const [enCours, setEnCours] = useState(false);
   const [palier, setPalier] = useState(1);
-  const [tempsRestantPalier, setTempsRestantPalier] = useState(DUREE_PALIER_MS);
+  const [tempsAvantBip, setTempsAvantBip] = useState(0);
+
   const audioCtxRef = useRef(null);
-  const intervalRef = useRef(null);
+  const boucleRef = useRef(null);
+  const palierIntervalRef = useRef(null);
+  const palierRef = useRef(1);
   const dernierBipRef = useRef(0);
 
   function jouerBip() {
@@ -27,16 +30,24 @@ export default function TestEndurance({ onTermine }) {
     osc.stop(ctx.currentTime + 0.15);
   }
 
+  function tempsPalierActuel() {
+    return TEMPS_PAR_PALIER[Math.min(palierRef.current - 1, TEMPS_PAR_PALIER.length - 1)] * 1000;
+  }
+
   function demarrer() {
     setEnCours(true);
     setPalier(1);
+    palierRef.current = 1;
     dernierBipRef.current = Date.now();
     jouerBip();
 
-    intervalRef.current = setInterval(() => {
-      const tempsPalier = (TEMPS_PAR_PALIER[Math.min(palierRef.current - 1, TEMPS_PAR_PALIER.length - 1)]) * 1000;
+    boucleRef.current = setInterval(() => {
+      const tempsPalier = tempsPalierActuel();
       const maintenant = Date.now();
       const ecoule = maintenant - dernierBipRef.current;
+
+      // Chrono visuel : temps restant avant le prochain bip, en secondes
+      setTempsAvantBip(Math.max(0, (tempsPalier - ecoule) / 1000));
 
       if (ecoule >= tempsPalier) {
         jouerBip();
@@ -50,19 +61,16 @@ export default function TestEndurance({ onTermine }) {
     }, DUREE_PALIER_MS);
   }
 
-  const palierRef = useRef(1);
-  const palierIntervalRef = useRef(null);
-
   function arreter() {
     setEnCours(false);
-    clearInterval(intervalRef.current);
+    clearInterval(boucleRef.current);
     clearInterval(palierIntervalRef.current);
     onTermine(palierRef.current);
   }
 
   useEffect(() => {
     return () => {
-      clearInterval(intervalRef.current);
+      clearInterval(boucleRef.current);
       clearInterval(palierIntervalRef.current);
     };
   }, []);
@@ -74,6 +82,13 @@ export default function TestEndurance({ onTermine }) {
       ) : (
         <>
           <p className="test-palier">Palier {palier}</p>
+          <div className="test-chrono-visuel" aria-live="off">
+            <div
+              className="test-chrono-barre"
+              style={{ width: `${(tempsAvantBip * 1000 / tempsPalierActuel()) * 100}%` }}
+            />
+          </div>
+          <p className="test-chrono-nombre">{tempsAvantBip.toFixed(1)} s avant le bip</p>
           <p className="test-hint-small">Cours entre les deux lignes à chaque bip !</p>
           <button className="quest-btn quest-btn--secondary" onClick={arreter}>
             J'ai raté deux fois — Arrêter

@@ -32,6 +32,27 @@ export default function CreateTeam() {
 
     if (supabaseReady) {
       const { data: { user } } = await supabase.auth.getUser();
+
+      // Sécurité : s'assurer que le profil existe avant de créer l'équipe
+      // (évite l'erreur de clé étrangère si le profil n'a pas pu être créé plus tôt)
+      const { data: profilExistant } = await supabase
+        .from('profils')
+        .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (!profilExistant) {
+        const prenomSecours = localStorage.getItem('dart_prenom') || 'Joueur';
+        const { error: erreurProfil } = await supabase
+          .from('profils')
+          .upsert({ id: user.id, prenom: prenomSecours });
+        if (erreurProfil) {
+          setErreur("Impossible de créer ton profil : " + erreurProfil.message);
+          setChargement(false);
+          return;
+        }
+      }
+
       const { data, error } = await supabase
         .from('equipes')
         .insert({
@@ -51,7 +72,7 @@ export default function CreateTeam() {
         return;
       }
 
-      await supabase.from('profils').update({ equipe_id: data.id }).eq('id', user.id);
+      await supabase.from('profils').update({ equipe_id: data.id, est_capitaine: true }).eq('id', user.id);
       localStorage.setItem('dart_equipe_code', code);
     } else {
       localStorage.setItem('dart_equipe_code', code);

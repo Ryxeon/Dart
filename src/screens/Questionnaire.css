@@ -99,6 +99,27 @@
   margin: 0 0 8px;
 }
 
+.test-chrono-visuel {
+  height: 10px;
+  background: var(--color-border);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.test-chrono-barre {
+  height: 100%;
+  background: var(--color-accent);
+  transition: width 0.05s linear;
+}
+
+.test-chrono-nombre {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0 0 12px;
+  font-weight: 600;
+}
+
 .test-chrono {
   font-family: var(--font-title);
   font-size: 40px;
