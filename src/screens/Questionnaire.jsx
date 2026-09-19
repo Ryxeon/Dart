@@ -5,6 +5,8 @@ import {
   niveauDetente, niveauSautBloc, niveauRapidite,
   niveauEndurance, niveauTechniqueDepuisMoyenne, moyenneArrondie,
 } from '../lib/scoring.js';
+import TestEndurance from '../components/TestEndurance.jsx';
+import TestSprint from '../components/TestSprint.jsx';
 import './Questionnaire.css';
 
 const ETAPES = ['force', 'detente', 'endurance', 'rapidite', 'technique', 'intelligence', 'fin'];
@@ -107,15 +109,21 @@ export default function Questionnaire() {
 
       {nom === 'endurance' && (
         <Etape titre="Endurance">
-          <p className="quest-hint">Fais le test navette (façon Luc Léger, 20m). Note le dernier palier que tu as validé entièrement.</p>
-          <NumField label="Dernier palier validé" value={palierEndurance} onChange={setPalierEndurance} />
+          <p className="quest-hint">Lance le test navette (façon Luc Léger, 20m) directement ici : l'app te fera les bips.</p>
+          <TestEndurance onTermine={(p) => setPalierEndurance(p)} />
+          <div style={{ marginTop: 20 }}>
+            <NumField label="Ou entre directement le dernier palier validé" value={palierEndurance} onChange={setPalierEndurance} />
+          </div>
         </Etape>
       )}
 
       {nom === 'rapidite' && (
         <Etape titre="Rapidité">
           <p className="quest-hint">Chronomètre un sprint de 30 mètres, départ arrêté.</p>
-          <NumField label="Temps (en secondes)" value={tempsSprint} onChange={setTempsSprint} step="0.01" />
+          <TestSprint onTermine={(t) => setTempsSprint(t)} />
+          <div style={{ marginTop: 20 }}>
+            <NumField label="Ou entre directement le temps (secondes)" value={tempsSprint} onChange={setTempsSprint} step="0.01" />
+          </div>
         </Etape>
       )}
 

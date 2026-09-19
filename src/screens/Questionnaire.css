@@ -81,6 +81,37 @@
   font-size: 15px;
 }
 
+.test-runner {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-md);
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.test-runner .quest-btn {
+  width: 100%;
+}
+
+.test-palier {
+  font-family: var(--font-title);
+  font-size: 40px;
+  color: var(--color-primary);
+  margin: 0 0 8px;
+}
+
+.test-chrono {
+  font-family: var(--font-title);
+  font-size: 40px;
+  color: var(--color-primary);
+  margin: 0 0 16px;
+}
+
+.test-hint-small {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  margin: 0 0 20px;
+}
+
 .quest-btn--primary {
   background: var(--color-primary);
   color: #FFFFFF;
