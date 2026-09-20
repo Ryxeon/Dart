@@ -85,6 +85,20 @@ create table exercices (
   created_at timestamp default now()
 );
 
+create table sous_equipes (
+  id uuid primary key default gen_random_uuid(),
+  equipe_id uuid references equipes(id) on delete cascade,
+  nom text not null,
+  capitaine_honorifique_id uuid references profils(id) on delete set null,
+  created_at timestamp default now()
+);
+
+create table sous_equipe_membres (
+  sous_equipe_id uuid references sous_equipes(id) on delete cascade,
+  profil_id uuid references profils(id) on delete cascade,
+  primary key (sous_equipe_id, profil_id)
+);
+
 -- ============================================================
 -- FONCTIONS (évitent la récursion infinie dans les règles RLS)
 -- ============================================================
@@ -130,6 +144,8 @@ alter table questionnaire_historique enable row level security;
 alter table evenements enable row level security;
 alter table presences enable row level security;
 alter table exercices enable row level security;
+alter table sous_equipes enable row level security;
+alter table sous_equipe_membres enable row level security;
 
 -- Profils
 create policy "Voir son propre profil"
@@ -195,3 +211,21 @@ create policy "Voir les exercices de son équipe"
 
 create policy "Le capitaine gère les exercices"
   on exercices for all using (equipe_id = mon_equipe_id() and je_suis_capitaine());
+
+-- Sous-équipes
+create policy "Voir les sous-équipes de son équipe"
+  on sous_equipes for select using (equipe_id = mon_equipe_id());
+
+create policy "Le capitaine gère les sous-équipes"
+  on sous_equipes for all using (equipe_id = mon_equipe_id() and je_suis_capitaine());
+
+create policy "Voir les membres des sous-équipes de son équipe"
+  on sous_equipe_membres for select using (
+    sous_equipe_id in (select id from sous_equipes where equipe_id = mon_equipe_id())
+  );
+
+create policy "Le capitaine gère les membres des sous-équipes"
+  on sous_equipe_membres for all using (
+    sous_equipe_id in (select id from sous_equipes where equipe_id = mon_equipe_id())
+    and je_suis_capitaine()
+  );

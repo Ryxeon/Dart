@@ -69,7 +69,7 @@ export default function ReglesTab() {
 
       {recherche.trim().length < 2 && (
         <>
-          <button className="regles-all-btn" onClick={() => navigate('/regles/rotations')}>
+          <button className="regles-all-btn" onClick={() => navigate('/toutes-les-regles')}>
             📘 Toutes les règles
           </button>
 

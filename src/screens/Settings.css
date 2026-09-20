@@ -44,9 +44,41 @@
   color: var(--color-text-primary);
   text-align: left;
   font-family: var(--font-text);
+  cursor: pointer;
 }
 
-.settings-row:last-child {
+.settings-row:hover {
+  background: var(--color-bg-card);
+}
+
+.settings-row:active {
+  background: var(--color-primary-light);
+}
+
+.settings-row--disabled {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.settings-row-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: var(--color-bg-card);
+  color: var(--color-text-secondary);
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+.settings-row:last-child,
+.settings-row--disabled:last-child {
   border-bottom: none;
 }
 

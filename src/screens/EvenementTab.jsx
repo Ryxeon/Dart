@@ -53,6 +53,16 @@ export default function EvenementTab() {
     });
   }
 
+  const [jourOuvert, setJourOuvert] = useState(null);
+
+  function evenementsDuJour(j) {
+    if (!j) return [];
+    return evenements.filter((e) => {
+      const d = new Date(e.date_debut);
+      return d.getDate() === j && d.getMonth() === mois && d.getFullYear() === annee;
+    });
+  }
+
   const prochain = evenements
     .filter((e) => new Date(e.date_debut) >= aujourdHui)
     .sort((a, b) => new Date(a.date_debut) - new Date(b.date_debut))[0];
@@ -86,13 +96,45 @@ export default function EvenementTab() {
       <div className="calendar-grid">
         {jours.map((j, i) => {
           const estAujourdhui = j === aujourdHui.getDate() && mois === aujourdHui.getMonth() && annee === aujourdHui.getFullYear();
+          if (!j) return <span key={i} className="calendar-day calendar-day--empty" />;
           return (
-            <span key={i} className={`calendar-day ${estAujourdhui ? 'calendar-day--today' : ''} ${!j ? 'calendar-day--empty' : ''} ${aUnEvenement(j) ? 'calendar-day--event' : ''}`}>
-              {j || ''}
-            </span>
+            <button
+              key={i}
+              className={`calendar-day calendar-day--btn ${estAujourdhui ? 'calendar-day--today' : ''} ${aUnEvenement(j) ? 'calendar-day--event' : ''}`}
+              onClick={() => setJourOuvert(j)}
+            >
+              {j}
+            </button>
           );
         })}
       </div>
+
+      {jourOuvert && (
+        <div className="popup-overlay" role="dialog" aria-modal="true">
+          <div className="popup" style={{ textAlign: 'left' }}>
+            <p className="popup-title" style={{ textAlign: 'center' }}>
+              {jourOuvert} {MOIS[mois]} {annee}
+            </p>
+            {evenementsDuJour(jourOuvert).length === 0 && (
+              <p className="placeholder-text" style={{ textAlign: 'center' }}>Aucun événement ce jour-là.</p>
+            )}
+            {evenementsDuJour(jourOuvert).map((e) => (
+              <div key={e.id} className="jour-evenement-item">
+                <p className="jour-evenement-titre">{e.titre}</p>
+                <p className="jour-evenement-type">{e.type}</p>
+                {e.lieu && <p className="jour-evenement-detail">📍 {e.lieu}</p>}
+                <p className="jour-evenement-detail">
+                  {new Date(e.date_debut).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                </p>
+                {e.description && <p className="jour-evenement-detail">{e.description}</p>}
+              </div>
+            ))}
+            <button className="popup-btn popup-btn--primary" style={{ width: '100%', marginTop: 12 }} onClick={() => setJourOuvert(null)}>
+              Fermer
+            </button>
+          </div>
+        </div>
+      )}
 
       {showAjout && (
         <AjoutEvenement

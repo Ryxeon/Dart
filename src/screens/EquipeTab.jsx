@@ -9,9 +9,13 @@ export default function EquipeTab() {
   const navigate = useNavigate();
   const [equipe, setEquipe] = useState(null);
   const [joueurs, setJoueurs] = useState([]);
+  const [sousEquipes, setSousEquipes] = useState([]);
+  const [monId, setMonId] = useState(null);
   const [estCapitaine, setEstCapitaine] = useState(false);
   const [chargement, setChargement] = useState(true);
   const [joueurEdite, setJoueurEdite] = useState(null);
+  const [sousEquipeEditee, setSousEquipeEditee] = useState(null);
+  const [showAjoutSousEquipe, setShowAjoutSousEquipe] = useState(false);
 
   async function charger() {
     if (!supabaseReady) {
@@ -19,6 +23,7 @@ export default function EquipeTab() {
       return;
     }
     const { data: { user } } = await supabase.auth.getUser();
+    setMonId(user.id);
     const { data: profil } = await supabase
       .from('profils')
       .select('equipe_id, est_capitaine')
@@ -40,6 +45,12 @@ export default function EquipeTab() {
         .select('id, prenom, poste, numero, est_capitaine')
         .eq('equipe_id', profil.equipe_id);
       setJoueurs(membres || []);
+
+      const { data: sousEq } = await supabase
+        .from('sous_equipes')
+        .select('*, sous_equipe_membres(profil_id)')
+        .eq('equipe_id', profil.equipe_id);
+      setSousEquipes(sousEq || []);
     }
     setChargement(false);
   }
@@ -56,6 +67,35 @@ export default function EquipeTab() {
     if (!confirm('Retirer ce joueur de l\'équipe ? Cette action est irréversible.')) return;
     await supabase.from('profils').update({ equipe_id: null }).eq('id', id);
     setJoueurEdite(null);
+    charger();
+  }
+
+  async function creerSousEquipe(nom) {
+    if (!nom.trim()) return;
+    await supabase.from('sous_equipes').insert({ equipe_id: equipe.id, nom });
+    setShowAjoutSousEquipe(false);
+    charger();
+  }
+
+  async function renommerSousEquipe(id, nouveauNom) {
+    await supabase.from('sous_equipes').update({ nom: nouveauNom }).eq('id', id);
+    setSousEquipeEditee(null);
+    charger();
+  }
+
+  async function toggleMembre(sousEquipeId, profilId, estDedans) {
+    if (estDedans) {
+      await supabase.from('sous_equipe_membres').delete().eq('sous_equipe_id', sousEquipeId).eq('profil_id', profilId);
+    } else {
+      await supabase.from('sous_equipe_membres').insert({ sous_equipe_id: sousEquipeId, profil_id: profilId });
+    }
+    charger();
+  }
+
+  async function supprimerSousEquipe(id) {
+    if (!confirm('Supprimer cette sous-équipe ?')) return;
+    await supabase.from('sous_equipes').delete().eq('id', id);
+    setSousEquipeEditee(null);
     charger();
   }
 
@@ -106,6 +146,31 @@ export default function EquipeTab() {
         {joueurs.length === 0 && <p className="placeholder-text">Aucun autre joueur pour l'instant.</p>}
       </div>
 
+      <div className="evenement-header" style={{ marginTop: 8 }}>
+        <p className="section-label" style={{ margin: 0 }}>Sous-équipes</p>
+        {estCapitaine && (
+          <button className="add-event-btn" onClick={() => setShowAjoutSousEquipe(true)} aria-label="Créer une sous-équipe">+</button>
+        )}
+      </div>
+      <div className="joueurs-list">
+        {sousEquipes.map((se) => {
+          const membresIds = (se.sous_equipe_membres || []).map((m) => m.profil_id);
+          const jeSuisDedans = membresIds.includes(monId);
+          return (
+            <button
+              key={se.id}
+              className="joueur-row"
+              onClick={() => estCapitaine && setSousEquipeEditee(se)}
+              style={{ cursor: estCapitaine ? 'pointer' : 'default' }}
+            >
+              <span className="joueur-nom">{se.nom}{jeSuisDedans ? ' (toi)' : ''}</span>
+              <span className="joueur-poste">{membresIds.length} joueur{membresIds.length > 1 ? 's' : ''}</span>
+            </button>
+          );
+        })}
+        {sousEquipes.length === 0 && <p className="placeholder-text">Aucune sous-équipe pour l'instant.</p>}
+      </div>
+
       <button className="settings-btn" onClick={() => navigate('/parametres')}>
         Paramètres
       </button>
@@ -116,6 +181,21 @@ export default function EquipeTab() {
           onFermer={() => setJoueurEdite(null)}
           onSauvegarder={sauvegarderJoueur}
           onSupprimer={supprimerJoueur}
+        />
+      )}
+
+      {showAjoutSousEquipe && (
+        <AjoutSousEquipe onFermer={() => setShowAjoutSousEquipe(false)} onCreer={creerSousEquipe} />
+      )}
+
+      {sousEquipeEditee && (
+        <EditeurSousEquipe
+          sousEquipe={sousEquipeEditee}
+          joueurs={joueurs}
+          onFermer={() => setSousEquipeEditee(null)}
+          onRenommer={renommerSousEquipe}
+          onToggleMembre={toggleMembre}
+          onSupprimer={supprimerSousEquipe}
         />
       )}
     </div>
@@ -155,6 +235,73 @@ function EditeurJoueur({ joueur, onFermer, onSauvegarder, onSupprimer }) {
           onClick={() => onSupprimer(joueur.id)}
         >
           Retirer de l'équipe
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AjoutSousEquipe({ onFermer, onCreer }) {
+  const [nom, setNom] = useState('');
+
+  return (
+    <div className="popup-overlay" role="dialog" aria-modal="true">
+      <div className="popup" style={{ textAlign: 'left' }}>
+        <p className="popup-title" style={{ textAlign: 'center' }}>Nouvelle sous-équipe</p>
+        <div className="field">
+          <label className="field-label">Nom (ex : Équipe 1, Seniors...)</label>
+          <input className="field-input" value={nom} onChange={(e) => setNom(e.target.value)} />
+        </div>
+        <div className="popup-actions">
+          <button className="popup-btn popup-btn--secondary" onClick={onFermer}>Annuler</button>
+          <button className="popup-btn popup-btn--primary" onClick={() => onCreer(nom)}>Créer</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EditeurSousEquipe({ sousEquipe, joueurs, onFermer, onRenommer, onToggleMembre, onSupprimer }) {
+  const [nom, setNom] = useState(sousEquipe.nom);
+  const membresIds = (sousEquipe.sous_equipe_membres || []).map((m) => m.profil_id);
+
+  return (
+    <div className="popup-overlay" role="dialog" aria-modal="true">
+      <div className="popup" style={{ textAlign: 'left', maxWidth: 360 }}>
+        <p className="popup-title" style={{ textAlign: 'center' }}>Modifier la sous-équipe</p>
+
+        <div className="field">
+          <label className="field-label">Nom</label>
+          <input className="field-input" value={nom} onChange={(e) => setNom(e.target.value)} />
+        </div>
+
+        <p className="field-label" style={{ marginBottom: 8 }}>Membres</p>
+        <div style={{ maxHeight: 200, overflowY: 'auto', marginBottom: 16 }}>
+          {joueurs.map((j) => {
+            const dedans = membresIds.includes(j.id);
+            return (
+              <label key={j.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', fontSize: 14 }}>
+                <input
+                  type="checkbox"
+                  checked={dedans}
+                  onChange={() => onToggleMembre(sousEquipe.id, j.id, dedans)}
+                />
+                {j.prenom}
+              </label>
+            );
+          })}
+        </div>
+
+        <div className="popup-actions">
+          <button className="popup-btn popup-btn--secondary" onClick={onFermer}>Fermer</button>
+          <button className="popup-btn popup-btn--primary" onClick={() => onRenommer(sousEquipe.id, nom)}>Enregistrer le nom</button>
+        </div>
+        <button
+          className="popup-btn"
+          style={{ marginTop: 10, background: 'none', color: 'var(--color-error)', border: '2px solid var(--color-error)', width: '100%' }}
+          onClick={() => onSupprimer(sousEquipe.id)}
+        >
+          Supprimer la sous-équipe
         </button>
       </div>
     </div>

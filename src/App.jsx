@@ -14,6 +14,8 @@ import ExerciceListe from './screens/ExerciceListe.jsx';
 import RegleDetail from './screens/RegleDetail.jsx';
 import PosteDetail from './screens/PosteDetail.jsx';
 import BonnesHabitudes from './screens/BonnesHabitudes.jsx';
+import ToutesLesRegles from './screens/ToutesLesRegles.jsx';
+import EditProfile from './screens/EditProfile.jsx';
 import './styles/theme.css';
 
 function App() {
@@ -35,6 +37,8 @@ function App() {
         <Route path="/regles/:id" element={<RegleDetail />} />
         <Route path="/postes/:id" element={<PosteDetail />} />
         <Route path="/bonnes-habitudes" element={<BonnesHabitudes />} />
+        <Route path="/toutes-les-regles" element={<ToutesLesRegles />} />
+        <Route path="/modifier-profil" element={<EditProfile />} />
       </Routes>
     </BrowserRouter>
   );

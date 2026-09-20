@@ -27,27 +27,27 @@ export default function Settings() {
       <h1 className="settings-title">Paramètres</h1>
 
       <SettingsSection titre="Compte">
-        <SettingsRow label="Modifier mon profil" />
-        <SettingsRow label="Changer mon mot de passe" />
-        <SettingsRow label="Changer mon email" />
+        <SettingsRow label="Modifier mon profil" onClick={() => navigate('/modifier-profil')} />
+        <SettingsRow label="Changer mon mot de passe" bientot />
+        <SettingsRow label="Changer mon email" bientot />
       </SettingsSection>
 
       <SettingsSection titre="Équipe">
-        <SettingsRow label="Voir le code d'équipe" />
-        <SettingsRow label="Modifier les infos du club" />
+        <SettingsRow label="Voir le code d'équipe" onClick={() => navigate('/accueil')} />
+        <SettingsRow label="Modifier les infos du club" bientot />
         <SettingsRow label="Quitter l'équipe" danger onClick={handleQuitterEquipe} />
       </SettingsSection>
 
       <SettingsSection titre="Notifications">
-        <SettingsRow label="Gérer les notifications" />
+        <SettingsRow label="Gérer les notifications" bientot />
       </SettingsSection>
 
       <SettingsSection titre="Général">
-        <SettingsRow label="Revoir le tuto" />
-        <SettingsRow label="Contact / Signaler un problème" />
-        <SettingsRow label="Mentions légales" />
+        <SettingsRow label="Revoir le tuto" bientot />
+        <SettingsRow label="Contact / Signaler un problème" bientot />
+        <SettingsRow label="Mentions légales" bientot />
         <SettingsRow label="Se déconnecter" onClick={handleDeconnexion} />
-        <SettingsRow label="Supprimer mon compte" danger />
+        <SettingsRow label="Supprimer mon compte" danger bientot />
       </SettingsSection>
     </div>
   );
@@ -62,7 +62,15 @@ function SettingsSection({ titre, children }) {
   );
 }
 
-function SettingsRow({ label, danger, onClick }) {
+function SettingsRow({ label, danger, onClick, bientot }) {
+  if (bientot) {
+    return (
+      <div className="settings-row settings-row--disabled">
+        {label}
+        <span className="settings-row-badge">Bientôt</span>
+      </div>
+    );
+  }
   return (
     <button className={`settings-row ${danger ? 'settings-row--danger' : ''}`} onClick={onClick}>
       {label}

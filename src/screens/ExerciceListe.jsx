@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { supabase, supabaseReady } from '../lib/supabase.js';
+import LecteurRoutine from '../components/LecteurRoutine.jsx';
 import './ExerciceListe.css';
 
 const TITRES = {
@@ -8,6 +9,8 @@ const TITRES = {
   entrainement: 'Entraînement',
   etirements: 'Étirements',
 };
+
+const CATEGORIES_AVEC_ROUTINE = ['echauffement', 'etirements'];
 
 export default function ExerciceListe() {
   const { categorie } = useParams();
@@ -17,6 +20,7 @@ export default function ExerciceListe() {
   const [equipeId, setEquipeId] = useState(null);
   const [showAjout, setShowAjout] = useState(false);
   const [exerciceOuvert, setExerciceOuvert] = useState(null);
+  const [routineLancee, setRoutineLancee] = useState(false);
 
   async function charger() {
     if (!supabaseReady) return;
@@ -46,6 +50,16 @@ export default function ExerciceListe() {
       </div>
       <h1 className="greeting-name" style={{ fontSize: 26 }}>{TITRES[categorie] || categorie}</h1>
 
+      {CATEGORIES_AVEC_ROUTINE.includes(categorie) && exercices.length > 0 && (
+        <button
+          className="form-btn form-btn--accent"
+          style={{ marginBottom: 20 }}
+          onClick={() => setRoutineLancee(true)}
+        >
+          ▶ Lancer la routine
+        </button>
+      )}
+
       <div className="exercices-grid">
         {exercices.map((ex) => (
           <button key={ex.id} className="exercice-card" onClick={() => setExerciceOuvert(ex)}>
@@ -57,6 +71,10 @@ export default function ExerciceListe() {
         ))}
         {exercices.length === 0 && <p className="placeholder-text">Aucun exercice pour l'instant.</p>}
       </div>
+
+      {routineLancee && (
+        <LecteurRoutine exercices={exercices} onTerminer={() => setRoutineLancee(false)} />
+      )}
 
       {exerciceOuvert && (
         <DetailExercice exercice={exerciceOuvert} onFermer={() => setExerciceOuvert(null)} />

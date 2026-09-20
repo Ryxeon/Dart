@@ -79,6 +79,45 @@
   font-weight: 700;
 }
 
+.calendar-day--btn {
+  background: none;
+  border: none;
+  font-family: var(--font-text);
+  cursor: pointer;
+}
+
+.calendar-day--btn:hover {
+  background: var(--color-bg-card);
+}
+
+.jour-evenement-item {
+  border-bottom: 1px solid var(--color-border);
+  padding: 10px 0;
+}
+
+.jour-evenement-item:last-of-type {
+  border-bottom: none;
+}
+
+.jour-evenement-titre {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 2px;
+}
+
+.jour-evenement-type {
+  font-size: 12px;
+  color: var(--color-accent-strong);
+  margin: 0 0 4px;
+}
+
+.jour-evenement-detail {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
 .calendar-day--empty {
   visibility: hidden;
 }

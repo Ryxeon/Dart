@@ -26,8 +26,12 @@
 }
 
 .radar-wrap svg {
-  max-width: 62%;
+  max-width: 60%;
   margin: 0 auto;
+}
+
+.radar-wrap {
+  padding: 0 12px;
 }
 
 .radar-wrap .radar-btn {
