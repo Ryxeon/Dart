@@ -11,9 +11,19 @@ export default function Settings() {
     navigate('/');
   }
 
+  async function handleQuitterEquipe() {
+    if (!confirm("Es-tu sûr de vouloir quitter ton équipe ?")) return;
+    if (supabaseReady) {
+      const { data: { user } } = await supabase.auth.getUser();
+      await supabase.from('profils').update({ equipe_id: null, est_capitaine: false }).eq('id', user.id);
+    }
+    localStorage.removeItem('dart_dernier_onglet');
+    navigate('/equipe-choix');
+  }
+
   return (
     <div className="settings-screen">
-      <button className="form-back" onClick={() => navigate('/accueil')} aria-label="Retour">←</button>
+      <button className="form-back" onClick={() => navigate(-1)} aria-label="Retour">←</button>
       <h1 className="settings-title">Paramètres</h1>
 
       <SettingsSection titre="Compte">
@@ -25,7 +35,7 @@ export default function Settings() {
       <SettingsSection titre="Équipe">
         <SettingsRow label="Voir le code d'équipe" />
         <SettingsRow label="Modifier les infos du club" />
-        <SettingsRow label="Quitter l'équipe" danger />
+        <SettingsRow label="Quitter l'équipe" danger onClick={handleQuitterEquipe} />
       </SettingsSection>
 
       <SettingsSection titre="Notifications">

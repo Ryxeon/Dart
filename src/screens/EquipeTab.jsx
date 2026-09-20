@@ -65,7 +65,15 @@ export default function EquipeTab() {
     return (
       <div className="tab-page">
         <h1 className="greeting-name" style={{ fontSize: 26 }}>Équipe</h1>
-        <p className="placeholder-text">Aucune équipe trouvée.</p>
+        <p className="placeholder-text" style={{ marginBottom: 20 }}>
+          Tu ne fais partie d'aucune équipe pour l'instant.
+        </p>
+        <button className="form-btn form-btn--accent" onClick={() => navigate('/creer-equipe')} style={{ marginBottom: 12 }}>
+          Créer une équipe
+        </button>
+        <button className="form-btn form-btn--outline" onClick={() => navigate('/rejoindre-equipe')}>
+          Rejoindre une équipe
+        </button>
       </div>
     );
   }

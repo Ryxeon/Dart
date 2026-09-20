@@ -78,7 +78,7 @@ export default function Questionnaire() {
 
   return (
     <div className="quest-screen">
-      <button className="form-back" onClick={() => navigate('/accueil')} aria-label="Fermer">←</button>
+      <button className="form-back" onClick={() => navigate(-1)} aria-label="Fermer">←</button>
       <div className="quest-progress">
         <div className="quest-progress-bar" style={{ width: `${((etape + 1) / ETAPES.length) * 100}%` }} />
       </div>
@@ -137,7 +137,11 @@ export default function Questionnaire() {
           <p className="quest-hint">
             Pour chaque action, fais 10 tentatives et donne un point selon la qualité de chacune :
             <strong> Raté = 0</strong>, <strong>Correct = 1</strong>, <strong>Réussi = 2</strong>, <strong>Parfait = 3</strong>.
-            Fais la moyenne des 10 points (entre 0 et 3) et entre-la ci-dessous.
+            Additionne les 10 points obtenus, puis divise par 10 pour avoir la moyenne — c'est ce
+            chiffre (entre 0 et 3) qu'il faut entrer ci-dessous.
+            <br /><br />
+            <em>Exemple : sur 10 réceptions, tu obtiens 2 Parfait (3 pts), 4 Réussi (2 pts),
+            3 Correct (1 pt) et 1 Raté (0 pt) → (2×3 + 4×2 + 3×1 + 1×0) ÷ 10 = <strong>1,7</strong></em>
           </p>
 
           <div className="quest-hint">

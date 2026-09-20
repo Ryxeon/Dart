@@ -13,6 +13,7 @@ import ResetPassword from './screens/ResetPassword.jsx';
 import ExerciceListe from './screens/ExerciceListe.jsx';
 import RegleDetail from './screens/RegleDetail.jsx';
 import PosteDetail from './screens/PosteDetail.jsx';
+import BonnesHabitudes from './screens/BonnesHabitudes.jsx';
 import './styles/theme.css';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path="/entrainement/:categorie" element={<ExerciceListe />} />
         <Route path="/regles/:id" element={<RegleDetail />} />
         <Route path="/postes/:id" element={<PosteDetail />} />
+        <Route path="/bonnes-habitudes" element={<BonnesHabitudes />} />
       </Routes>
     </BrowserRouter>
   );

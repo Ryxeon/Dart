@@ -28,6 +28,10 @@ export default function TeamChoice() {
         >
           Rejoindre une équipe
         </button>
+
+        <button className="team-skip-link" onClick={() => navigate('/accueil')}>
+          Je n'ai pas d'équipe pour l'instant
+        </button>
       </div>
     </FormScreen>
   );

@@ -39,7 +39,7 @@ export default function ExerciceListe() {
   return (
     <div className="tab-page">
       <div className="evenement-header">
-        <button className="form-back" onClick={() => navigate('/accueil')} aria-label="Retour">←</button>
+        <button className="form-back" onClick={() => navigate(-1)} aria-label="Retour">←</button>
         {estCapitaine && (
           <button className="add-event-btn" onClick={() => setShowAjout(true)} aria-label="Ajouter un exercice">+</button>
         )}

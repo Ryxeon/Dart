@@ -1,3 +1,29 @@
+export const BONNES_HABITUDES = {
+  titre: 'Bonnes habitudes',
+  sections: [
+    {
+      sous_titre: 'Le sommeil',
+      texte: "Vise 8 à 9h de sommeil par nuit, surtout les nuits avant un match ou un entraînement intense. Le sommeil est essentiel à la récupération musculaire et à la concentration sur le terrain.",
+    },
+    {
+      sous_titre: 'Avant l\'entraînement',
+      texte: "Mange un repas léger et riche en glucides 2 à 3h avant (pâtes, riz, banane...). Évite les aliments gras ou trop lourds juste avant de jouer, qui ralentissent la digestion et pèsent pendant l'effort. Bois de l'eau régulièrement dans les heures qui précèdent.",
+    },
+    {
+      sous_titre: 'Pourquoi s\'échauffer',
+      texte: "L'échauffement augmente la température musculaire et la fréquence cardiaque progressivement, ce qui réduit fortement le risque de blessure (déchirure, entorse) et améliore la qualité des premiers gestes.",
+    },
+    {
+      sous_titre: 'Quand s\'étirer',
+      texte: "Privilégie des étirements dynamiques (mouvements contrôlés) avant l'effort, et des étirements statiques (maintenus) après l'entraînement, une fois les muscles chauds, pour favoriser la récupération et la souplesse.",
+    },
+    {
+      sous_titre: 'Après l\'entraînement',
+      texte: "Mange dans l'heure qui suit un repas avec des protéines (pour la récupération musculaire) et des glucides (pour reconstituer l'énergie). Reste hydraté dans les heures qui suivent.",
+    },
+  ],
+};
+
 export const REGLES_IMPORTANTES = {
   rotations: {
     titre: 'Rotations',
@@ -101,3 +127,25 @@ export const POSTES = {
     conseils: "Travaille les déplacements bas et rapides, les plongeons contrôlés, et surtout la lecture des trajectoires d'attaque adverses pour anticiper où défendre.",
   },
 };
+
+// Index à plat utilisé par la barre de recherche : une entrée par phrase/section
+export function construireIndexRecherche() {
+  const index = [];
+
+  Object.entries(REGLES_IMPORTANTES).forEach(([id, regle]) => {
+    regle.sections.forEach((s) => {
+      index.push({ route: `/regles/${id}`, titre: regle.titre, sousTitre: s.sous_titre, texte: s.texte });
+    });
+  });
+
+  Object.entries(POSTES).forEach(([id, poste]) => {
+    index.push({ route: `/postes/${id}`, titre: poste.titre, sousTitre: 'Règles du poste', texte: poste.regles });
+    index.push({ route: `/postes/${id}`, titre: poste.titre, sousTitre: 'Conseils', texte: poste.conseils });
+  });
+
+  BONNES_HABITUDES.sections.forEach((s) => {
+    index.push({ route: '/bonnes-habitudes', titre: BONNES_HABITUDES.titre, sousTitre: s.sous_titre, texte: s.texte });
+  });
+
+  return index;
+}

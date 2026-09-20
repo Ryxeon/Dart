@@ -1,3 +1,41 @@
+.resultats-recherche {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.resultat-item {
+  background: var(--color-bg-paper);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resultat-titre {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.resultat-extrait {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.recherche-surlignage {
+  background: var(--color-accent-light);
+  color: var(--color-accent-strong);
+  font-weight: 700;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
 .regles-search {
   width: 100%;
   padding: 13px 14px;

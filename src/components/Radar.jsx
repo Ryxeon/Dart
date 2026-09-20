@@ -8,7 +8,7 @@ const AXES = [
 ];
 
 export default function Radar({ competences }) {
-  const cx = 110, cy = 110, maxR = 90;
+  const cx = 140, cy = 140, maxR = 78;
 
   function point(i, valeur) {
     const angle = (Math.PI * 2 * i) / AXES.length - Math.PI / 2;
@@ -16,16 +16,22 @@ export default function Radar({ competences }) {
     return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
   }
 
-  function labelPoint(i) {
+  function labelInfo(i) {
     const angle = (Math.PI * 2 * i) / AXES.length - Math.PI / 2;
-    const r = maxR + 18;
-    return [cx + r * Math.cos(angle), cy + r * Math.sin(angle)];
+    const r = maxR + 26;
+    const x = cx + r * Math.cos(angle);
+    const y = cy + r * Math.sin(angle);
+    // Aligne le texte selon sa position autour du cercle pour éviter qu'il dépasse
+    let anchor = 'middle';
+    if (Math.cos(angle) > 0.3) anchor = 'start';
+    else if (Math.cos(angle) < -0.3) anchor = 'end';
+    return { x, y, anchor };
   }
 
   const zonePoints = AXES.map((a, i) => point(i, competences[a.key] || 0)).map((p) => p.join(',')).join(' ');
 
   return (
-    <svg width="100%" viewBox="0 0 220 220" role="img" aria-label="Radar de compétences">
+    <svg width="100%" viewBox="0 0 280 280" role="img" aria-label="Radar de compétences">
       <g stroke="var(--color-border)" strokeWidth="1" fill="none">
         {[1, 2, 3].map((n) => (
           <polygon
@@ -42,9 +48,9 @@ export default function Radar({ competences }) {
       <polygon points={zonePoints} fill="var(--color-accent-light)" stroke="var(--color-accent)" strokeWidth="2" />
 
       {AXES.map((a, i) => {
-        const [x, y] = labelPoint(i);
+        const { x, y, anchor } = labelInfo(i);
         return (
-          <text key={a.key} x={x} y={y} textAnchor="middle" fontSize="10" fill="var(--color-text-secondary)">
+          <text key={a.key} x={x} y={y} textAnchor={anchor} fontSize="13" fill="var(--color-text-secondary)">
             {a.label}
           </text>
         );

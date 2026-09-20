@@ -10,8 +10,13 @@ import { supabase, supabaseReady } from '../lib/supabase.js';
 import './Home.css';
 
 export default function Home() {
-  const [tab, setTab] = useState('competences');
+  const [tab, setTab] = useState(() => localStorage.getItem('dart_dernier_onglet') || 'competences');
   const prenom = localStorage.getItem('dart_prenom') || 'joueur';
+
+  function changerOnglet(nouvelOnglet) {
+    setTab(nouvelOnglet);
+    localStorage.setItem('dart_dernier_onglet', nouvelOnglet);
+  }
 
   return (
     <div className="home-screen">
@@ -22,7 +27,7 @@ export default function Home() {
         {tab === 'regles' && <ReglesTab />}
         {tab === 'equipe' && <EquipeTab />}
       </div>
-      <BottomNav active={tab} onChange={setTab} />
+      <BottomNav active={tab} onChange={changerOnglet} />
     </div>
   );
 }
