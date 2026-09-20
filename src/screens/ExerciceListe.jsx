@@ -21,6 +21,9 @@ export default function ExerciceListe() {
   const [showAjout, setShowAjout] = useState(false);
   const [exerciceOuvert, setExerciceOuvert] = useState(null);
   const [routineLancee, setRoutineLancee] = useState(false);
+  const [routines, setRoutines] = useState([]);
+  const [showCreationRoutine, setShowCreationRoutine] = useState(false);
+  const [routineEnLecture, setRoutineEnLecture] = useState(null);
 
   async function charger() {
     if (!supabaseReady) return;
@@ -36,6 +39,11 @@ export default function ExerciceListe() {
       .eq('categorie', categorie)
       .order('ordre', { ascending: true });
     setExercices(data || []);
+
+    if (categorie === 'entrainement') {
+      const { data: r } = await supabase.from('routines').select('*').eq('equipe_id', profil.equipe_id);
+      setRoutines(r || []);
+    }
   }
 
   useEffect(() => { charger(); }, [categorie]);
@@ -72,12 +80,54 @@ export default function ExerciceListe() {
         {exercices.length === 0 && <p className="placeholder-text">Aucun exercice pour l'instant.</p>}
       </div>
 
+      {categorie === 'entrainement' && (
+        <>
+          <div className="evenement-header" style={{ marginTop: 24 }}>
+            <p className="section-label" style={{ margin: 0 }}>Bibliothèque de routines</p>
+            {estCapitaine && exercices.length > 0 && (
+              <button className="add-event-btn" onClick={() => setShowCreationRoutine(true)} aria-label="Créer une routine">+</button>
+            )}
+          </div>
+          <div className="joueurs-list">
+            {routines.map((r) => (
+              <div key={r.id} className="joueur-row" style={{ cursor: 'default' }}>
+                <span className="joueur-nom">{r.nom}</span>
+                <button
+                  className="regle-card"
+                  style={{ padding: '6px 14px', minHeight: 'auto' }}
+                  onClick={() => setRoutineEnLecture(r)}
+                >
+                  ▶ Lancer
+                </button>
+              </div>
+            ))}
+            {routines.length === 0 && <p className="placeholder-text">Aucune routine créée pour l'instant.</p>}
+          </div>
+        </>
+      )}
+
       {routineLancee && (
         <LecteurRoutine exercices={exercices} onTerminer={() => setRoutineLancee(false)} />
       )}
 
+      {routineEnLecture && (
+        <LecteurRoutine
+          exercices={routineEnLecture.contenu.map((c) => exercices.find((e) => e.id === c.exercice_id)).filter(Boolean)}
+          onTerminer={() => setRoutineEnLecture(null)}
+        />
+      )}
+
       {exerciceOuvert && (
         <DetailExercice exercice={exerciceOuvert} onFermer={() => setExerciceOuvert(null)} />
+      )}
+
+      {showCreationRoutine && (
+        <CreationRoutine
+          exercices={exercices}
+          equipeId={equipeId}
+          onFermer={() => setShowCreationRoutine(false)}
+          onCree={() => { setShowCreationRoutine(false); charger(); }}
+        />
       )}
 
       {showAjout && (
@@ -190,6 +240,60 @@ function AjoutExercice({ categorie, equipeId, onFermer, onAjoute }) {
         <div className="popup-actions">
           <button className="popup-btn popup-btn--secondary" onClick={onFermer}>Annuler</button>
           <button className="popup-btn popup-btn--primary" onClick={handleAjouter}>Ajouter</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function CreationRoutine({ exercices, equipeId, onFermer, onCree }) {
+  const [nom, setNom] = useState('');
+  const [selection, setSelection] = useState([]);
+  const [erreur, setErreur] = useState('');
+
+  function toggle(id) {
+    setSelection((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  }
+
+  async function handleCreer() {
+    if (!nom.trim() || selection.length === 0) {
+      setErreur("Donne un nom et sélectionne au moins un exercice");
+      return;
+    }
+    const contenu = selection.map((exercice_id, i) => ({ exercice_id, ordre: i }));
+    const { error } = await supabase.from('routines').insert({ equipe_id: equipeId, nom, contenu });
+    if (error) {
+      setErreur('Erreur : ' + error.message);
+      return;
+    }
+    onCree();
+  }
+
+  return (
+    <div className="popup-overlay" role="dialog" aria-modal="true">
+      <div className="popup" style={{ textAlign: 'left', maxWidth: 360 }}>
+        <p className="popup-title" style={{ textAlign: 'center' }}>Nouvelle routine</p>
+
+        <div className="field">
+          <label className="field-label">Nom de la routine</label>
+          <input className="field-input" value={nom} onChange={(e) => setNom(e.target.value)} />
+        </div>
+
+        <p className="field-label" style={{ marginBottom: 8 }}>Exercices (dans l'ordre de sélection)</p>
+        <div style={{ maxHeight: 220, overflowY: 'auto', marginBottom: 16 }}>
+          {exercices.map((ex) => (
+            <label key={ex.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '6px 0', fontSize: 14 }}>
+              <input type="checkbox" checked={selection.includes(ex.id)} onChange={() => toggle(ex.id)} />
+              {ex.nom} {selection.includes(ex.id) && `(#${selection.indexOf(ex.id) + 1})`}
+            </label>
+          ))}
+        </div>
+
+        {erreur && <p className="field-error">{erreur}</p>}
+
+        <div className="popup-actions">
+          <button className="popup-btn popup-btn--secondary" onClick={onFermer}>Annuler</button>
+          <button className="popup-btn popup-btn--primary" onClick={handleCreer}>Créer la routine</button>
         </div>
       </div>
     </div>

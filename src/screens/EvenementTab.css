@@ -118,6 +118,16 @@
   margin: 0;
 }
 
+.supprimer-evenement-btn {
+  background: none;
+  border: none;
+  color: var(--color-error);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 0 0;
+  font-family: var(--font-text);
+}
+
 .calendar-day--empty {
   visibility: hidden;
 }
@@ -136,4 +146,37 @@
   height: 4px;
   border-radius: 50%;
   background: var(--color-accent);
+}
+
+.next-event-countdown {
+  font-family: var(--font-title);
+  font-size: 22px;
+  color: var(--color-accent);
+  margin: 4px 0 14px;
+}
+
+.presence-row {
+  display: flex;
+  gap: 10px;
+}
+
+.presence-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.presence-btn--active-oui {
+  background: var(--color-success);
+  border-color: var(--color-success);
+}
+
+.presence-btn--active-non {
+  background: var(--color-error);
+  border-color: var(--color-error);
 }

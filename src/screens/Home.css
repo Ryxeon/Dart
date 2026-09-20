@@ -64,3 +64,25 @@
   color: var(--color-text-secondary);
   font-size: 14px;
 }
+
+.page-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.page-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-border);
+  border: none;
+  padding: 0;
+}
+
+.page-dot--active {
+  background: var(--color-accent);
+  width: 20px;
+  border-radius: 4px;
+}

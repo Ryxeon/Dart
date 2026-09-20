@@ -12,7 +12,14 @@ export default function EvenementTab() {
   const [equipeId, setEquipeId] = useState(null);
   const [estCapitaine, setEstCapitaine] = useState(false);
   const [showAjout, setShowAjout] = useState(false);
+  const [maPresence, setMaPresence] = useState(null);
+  const [maintenant, setMaintenant] = useState(new Date());
   const aujourdHui = new Date();
+
+  useEffect(() => {
+    const timer = setInterval(() => setMaintenant(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   async function charger() {
     if (!supabaseReady) return;
@@ -27,6 +34,39 @@ export default function EvenementTab() {
       .eq('equipe_id', profil.equipe_id)
       .order('date_debut', { ascending: true });
     setEvenements(data || []);
+
+    const prochainEv = (data || []).filter((e) => new Date(e.date_debut) >= new Date())
+      .sort((a, b) => new Date(a.date_debut) - new Date(b.date_debut))[0];
+    if (prochainEv) {
+      const { data: presence } = await supabase
+        .from('presences')
+        .select('present')
+        .eq('evenement_id', prochainEv.id)
+        .eq('profil_id', user.id)
+        .maybeSingle();
+      setMaPresence(presence?.present ?? null);
+    }
+  }
+
+  async function repondrePresence(present) {
+    const { data: { user } } = await supabase.auth.getUser();
+    await supabase.from('presences').upsert(
+      { evenement_id: prochain.id, profil_id: user.id, present },
+      { onConflict: 'evenement_id,profil_id' }
+    );
+    setMaPresence(present);
+  }
+
+  function formatCompteARebours(dateEvenement) {
+    const diff = new Date(dateEvenement) - maintenant;
+    if (diff <= 0) return "C'est maintenant !";
+    const jours = Math.floor(diff / 86400000);
+    const heures = Math.floor((diff % 86400000) / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const secondes = Math.floor((diff % 60000) / 1000);
+    if (jours > 0) return `${jours}j ${heures}h ${minutes}min`;
+    if (heures > 0) return `${heures}h ${minutes}min ${secondes}s`;
+    return `${minutes}min ${secondes}s`;
   }
 
   useEffect(() => { charger(); }, []);
@@ -55,6 +95,12 @@ export default function EvenementTab() {
 
   const [jourOuvert, setJourOuvert] = useState(null);
 
+  async function supprimerEvenement(id) {
+    if (!confirm('Supprimer cet événement ?')) return;
+    await supabase.from('evenements').delete().eq('id', id);
+    charger();
+  }
+
   function evenementsDuJour(j) {
     if (!j) return [];
     return evenements.filter((e) => {
@@ -78,9 +124,28 @@ export default function EvenementTab() {
 
       <div className="next-event-card">
         <p className="next-event-label">Prochain événement</p>
-        <p className="next-event-title">
-          {prochain ? `${prochain.titre} — ${new Date(prochain.date_debut).toLocaleDateString('fr-FR')}` : 'Aucun événement programmé'}
-        </p>
+        {prochain ? (
+          <>
+            <p className="next-event-title">{prochain.titre}</p>
+            <p className="next-event-countdown">{formatCompteARebours(prochain.date_debut)}</p>
+            <div className="presence-row">
+              <button
+                className={`presence-btn ${maPresence === true ? 'presence-btn--active-oui' : ''}`}
+                onClick={() => repondrePresence(true)}
+              >
+                Présent
+              </button>
+              <button
+                className={`presence-btn ${maPresence === false ? 'presence-btn--active-non' : ''}`}
+                onClick={() => repondrePresence(false)}
+              >
+                Absent
+              </button>
+            </div>
+          </>
+        ) : (
+          <p className="next-event-title">Aucun événement programmé</p>
+        )}
       </div>
 
       <div className="calendar-header">
@@ -127,6 +192,11 @@ export default function EvenementTab() {
                   {new Date(e.date_debut).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
                 </p>
                 {e.description && <p className="jour-evenement-detail">{e.description}</p>}
+                {estCapitaine && (
+                  <button className="supprimer-evenement-btn" onClick={() => supprimerEvenement(e.id)}>
+                    Supprimer cet événement
+                  </button>
+                )}
               </div>
             ))}
             <button className="popup-btn popup-btn--primary" style={{ width: '100%', marginTop: 12 }} onClick={() => setJourOuvert(null)}>

@@ -1,0 +1,18 @@
+.welcome-after-screen {
+  min-height: 100vh;
+  background: var(--color-bg-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.welcome-after-text {
+  font-family: var(--font-title);
+  font-size: 26px;
+  color: var(--color-primary);
+  line-height: 1.4;
+  margin: 0 0 36px;
+}

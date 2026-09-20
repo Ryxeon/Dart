@@ -42,7 +42,7 @@ export default function EquipeTab() {
 
       const { data: membres } = await supabase
         .from('profils')
-        .select('id, prenom, poste, numero, est_capitaine')
+        .select('id, prenom, poste, voeu_poste, numero, est_capitaine, titulaire')
         .eq('equipe_id', profil.equipe_id);
       setJoueurs(membres || []);
 
@@ -57,8 +57,8 @@ export default function EquipeTab() {
 
   useEffect(() => { charger(); }, []);
 
-  async function sauvegarderJoueur(id, numero, poste) {
-    await supabase.from('profils').update({ numero: numero || null, poste }).eq('id', id);
+  async function sauvegarderJoueur(id, numero, poste, titulaire) {
+    await supabase.from('profils').update({ numero: numero || null, poste, titulaire }).eq('id', id);
     setJoueurEdite(null);
     charger();
   }
@@ -140,7 +140,9 @@ export default function EquipeTab() {
             <span className="joueur-nom">
               {j.numero ? `#${j.numero} ` : ''}{j.prenom}{j.est_capitaine ? ' (C)' : ''}
             </span>
-            <span className="joueur-poste">{j.poste || 'Poste non défini'}</span>
+            <span className="joueur-poste">
+              {j.poste || 'Poste non défini'}{j.titulaire ? ' · Titulaire' : ' · Remplaçant'}
+            </span>
           </button>
         ))}
         {joueurs.length === 0 && <p className="placeholder-text">Aucun autre joueur pour l'instant.</p>}
@@ -205,12 +207,20 @@ export default function EquipeTab() {
 function EditeurJoueur({ joueur, onFermer, onSauvegarder, onSupprimer }) {
   const [numero, setNumero] = useState(joueur.numero || '');
   const [poste, setPoste] = useState(joueur.poste || POSTES[0]);
+  const [titulaire, setTitulaire] = useState(!!joueur.titulaire);
 
   return (
     <div className="popup-overlay" role="dialog" aria-modal="true">
       <div className="popup">
         <p className="popup-title">{joueur.prenom}</p>
-        <div className="field" style={{ textAlign: 'left', marginTop: 16 }}>
+
+        {joueur.voeu_poste && (
+          <p style={{ fontSize: 12, color: 'var(--color-text-secondary)', textAlign: 'left', marginTop: 12 }}>
+            Vœu de poste : <strong>{joueur.voeu_poste}</strong>
+          </p>
+        )}
+
+        <div className="field" style={{ textAlign: 'left', marginTop: 12 }}>
           <label className="field-label">Numéro</label>
           <input
             type="number"
@@ -225,9 +235,13 @@ function EditeurJoueur({ joueur, onFermer, onSauvegarder, onSupprimer }) {
             {POSTES.map((p) => <option key={p} value={p}>{p}</option>)}
           </select>
         </div>
+        <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 14, marginBottom: 16 }}>
+          <input type="checkbox" checked={titulaire} onChange={(e) => setTitulaire(e.target.checked)} />
+          Titulaire (sinon remplaçant)
+        </label>
         <div className="popup-actions">
           <button className="popup-btn popup-btn--secondary" onClick={onFermer}>Annuler</button>
-          <button className="popup-btn popup-btn--primary" onClick={() => onSauvegarder(joueur.id, numero, poste)}>Enregistrer</button>
+          <button className="popup-btn popup-btn--primary" onClick={() => onSauvegarder(joueur.id, numero, poste, titulaire)}>Enregistrer</button>
         </div>
         <button
           className="popup-btn"

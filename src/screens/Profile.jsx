@@ -57,13 +57,13 @@ export default function Profile() {
           age: age ? parseInt(age, 10) : null,
           taille: taille ? parseInt(taille, 10) : null,
           bras_tendu: brasTendu ? parseInt(brasTendu, 10) : null,
-          poste,
+          voeu_poste: poste,
           est_capitaine: estCapitaine,
         });
       }
     }
 
-    navigate('/equipe-choix');
+    navigate('/bienvenue-profil');
   }
 
   return (

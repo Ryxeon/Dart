@@ -16,6 +16,7 @@ import PosteDetail from './screens/PosteDetail.jsx';
 import BonnesHabitudes from './screens/BonnesHabitudes.jsx';
 import ToutesLesRegles from './screens/ToutesLesRegles.jsx';
 import EditProfile from './screens/EditProfile.jsx';
+import WelcomeAfterProfile from './screens/WelcomeAfterProfile.jsx';
 import './styles/theme.css';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
         <Route path="/bonnes-habitudes" element={<BonnesHabitudes />} />
         <Route path="/toutes-les-regles" element={<ToutesLesRegles />} />
         <Route path="/modifier-profil" element={<EditProfile />} />
+        <Route path="/bienvenue-profil" element={<WelcomeAfterProfile />} />
       </Routes>
     </BrowserRouter>
   );

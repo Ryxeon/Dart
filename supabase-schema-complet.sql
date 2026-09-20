@@ -85,6 +85,9 @@ create table exercices (
   created_at timestamp default now()
 );
 
+alter table profils add column if not exists voeu_poste text;
+alter table profils add column if not exists titulaire boolean default false;
+
 create table sous_equipes (
   id uuid primary key default gen_random_uuid(),
   equipe_id uuid references equipes(id) on delete cascade,
@@ -97,6 +100,30 @@ create table sous_equipe_membres (
   sous_equipe_id uuid references sous_equipes(id) on delete cascade,
   profil_id uuid references profils(id) on delete cascade,
   primary key (sous_equipe_id, profil_id)
+);
+
+create table routines (
+  id uuid primary key default gen_random_uuid(),
+  equipe_id uuid references equipes(id) on delete cascade,
+  nom text not null,
+  contenu jsonb not null default '[]'::jsonb,
+  created_at timestamp default now()
+);
+
+create table exercice_resultats (
+  id uuid primary key default gen_random_uuid(),
+  profil_id uuid references profils(id) on delete cascade,
+  exercice_id uuid references exercices(id) on delete cascade,
+  valeur numeric not null,
+  date_passage timestamp default now()
+);
+
+create table stats_match (
+  id uuid primary key default gen_random_uuid(),
+  profil_id uuid references profils(id) on delete cascade,
+  action text not null,
+  pourcentage numeric not null,
+  date_passage timestamp default now()
 );
 
 -- ============================================================
@@ -146,6 +173,15 @@ alter table presences enable row level security;
 alter table exercices enable row level security;
 alter table sous_equipes enable row level security;
 alter table sous_equipe_membres enable row level security;
+alter table routines enable row level security;
+alter table exercice_resultats enable row level security;
+alter table stats_match enable row level security;
+alter table routines enable row level security;
+alter table exercice_resultats enable row level security;
+alter table stats_match enable row level security;
+alter table routines enable row level security;
+alter table exercice_resultats enable row level security;
+alter table stats_match enable row level security;
 
 -- Profils
 create policy "Voir son propre profil"
@@ -229,3 +265,74 @@ create policy "Le capitaine gère les membres des sous-équipes"
     sous_equipe_id in (select id from sous_equipes where equipe_id = mon_equipe_id())
     and je_suis_capitaine()
   );
+
+-- Routines
+create policy "Voir les routines de son équipe"
+  on routines for select using (equipe_id = mon_equipe_id());
+
+create policy "Le capitaine gère les routines"
+  on routines for all using (equipe_id = mon_equipe_id() and je_suis_capitaine());
+
+-- Résultats musculation
+create policy "Voir ses propres résultats muscu"
+  on exercice_resultats for select using (auth.uid() = profil_id);
+
+create policy "Ajouter ses propres résultats muscu"
+  on exercice_resultats for insert with check (auth.uid() = profil_id);
+
+-- Stats de match
+create policy "Voir ses propres stats"
+  on stats_match for select using (auth.uid() = profil_id);
+
+create policy "Ajouter ses propres stats"
+  on stats_match for insert with check (auth.uid() = profil_id);
+
+-- Routines personnalisées
+create policy "Voir les routines de son équipe"
+  on routines for select using (equipe_id = mon_equipe_id());
+
+create policy "Le capitaine gère les routines"
+  on routines for all using (equipe_id = mon_equipe_id() and je_suis_capitaine());
+
+-- Résultats muscu (chacun voit et modifie les siens)
+create policy "Voir ses propres résultats muscu"
+  on exercice_resultats for select using (auth.uid() = profil_id);
+
+create policy "Ajouter ses propres résultats muscu"
+  on exercice_resultats for insert with check (auth.uid() = profil_id);
+
+-- Stats de match (chacun voit et modifie les siennes)
+create policy "Voir ses propres stats de match"
+  on stats_match for select using (auth.uid() = profil_id);
+
+create policy "Ajouter ses propres stats de match"
+  on stats_match for insert with check (auth.uid() = profil_id);
+
+-- Le capitaine peut aussi supprimer un événement (en plus de le créer/modifier)
+create policy "Le capitaine supprime un événement"
+  on evenements for delete using (equipe_id = mon_equipe_id() and je_suis_capitaine());
+
+-- Routines
+create policy "Voir les routines de son équipe"
+  on routines for select using (equipe_id = mon_equipe_id());
+
+create policy "Le capitaine gère les routines"
+  on routines for all using (equipe_id = mon_equipe_id() and je_suis_capitaine());
+
+-- Résultats d'exercices (chacun voit et ajoute les siens)
+create policy "Voir ses résultats d'exercices"
+  on exercice_resultats for select using (auth.uid() = profil_id);
+
+create policy "Ajouter ses résultats d'exercices"
+  on exercice_resultats for insert with check (auth.uid() = profil_id);
+
+-- Stats de match (chacun voit et ajoute les siennes)
+create policy "Voir ses stats de match"
+  on stats_match for select using (auth.uid() = profil_id);
+
+create policy "Ajouter ses stats de match"
+  on stats_match for insert with check (auth.uid() = profil_id);
+
+-- Suppression d'un événement par le capitaine
+create policy "Le capitaine supprime un événement"
+  on evenements for delete using (equipe_id = mon_equipe_id() and je_suis_capitaine());

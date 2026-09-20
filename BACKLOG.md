@@ -1,5 +1,9 @@
 # Backlog — prochaines mises à jour (pas encore codé)
 
+## Mode "sérieux" (sans mascotte, sans jeux)
+- Option à ajouter à la création d'une équipe : un toggle "version sérieuse" qui
+  retire la mascotte Kroa, les éléments ludiques/jeux, et garde une interface sobre
+
 ## Kroa personnelle + motivation entraînement solo
 - Nouvel onglet (ou nouvel emplacement) : page dédiée à l'entraînement en dehors du club
 - Chaque joueur a sa propre Kroa, personnalisable (renommable, accessoires)
